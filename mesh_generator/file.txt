@@ -1,0 +1,2 @@
+1                                      # The number of objects
+body.001.stl 0.0062500000 .False. F    # name of the first .stl file; finest resolution; 
