@@ -1,0 +1,247 @@
+! --------------------------------------------------------------------------- !
+!                            MGLET Definition file                            !
+! --------------------------------------------------------------------------- !
+
+
+! ---------------------------- Common settings ------------------------------ !
+! Precision settings
+#undef _DOUBLE_PRECISION_
+
+! Tell MGLET that you want to use the new HDF5 solint implementation
+! and possibly (in the future) other features depending on HDF5
+! (NB: require MPI-3 support)
+#define _H5SOLINT_
+#define _H5FIELDIO_
+
+
+! ------------------------ Turbulence modelling ----------------------------- !
+! Turns off any turbulence modelling
+#define _DNS_
+
+! Which mixing length model to use (you have to choose one)
+#undef _DDMIX2_
+#undef _DDMIX3_
+#undef _DDMIX4_
+
+! Van Driest Damping for channel flow, two formulations
+#undef _VAN_DRIEST_
+#undef _VAN_DRIEST3_
+
+! Van Driest Damping for boundary layer flow, two formulations
+#undef _VAN_DRIEST_BL_
+#undef _VAN_DRIEST3_BL_
+
+! Rough walls on no-slip boundaries
+#undef _ROUGHWALL_
+
+! Which subgrid scale model to use, no selected = Smagorinsky
+#undef _WALEVISC_
+#undef _DYNSGSM_
+#undef _LAGSGSM_
+
+! For dynamic Smagorinsky SGS model, filtering only in y-direction
+! (if nothing defined, filtering in x-y-planes)
+#undef _FILTERY_
+#undef _PARALLELY_
+
+
+! ------------------------- Other features ---------------------------------- !
+! Non-Newtonian stresses
+#undef _TAU_NN_
+
+! Scalar heat/temperature transport
+#undef _TSCAL_
+#undef _CHEM1_
+#undef _SCABODY_
+
+! Turbulent Prandtl number
+#undef _KAYSCRAWFORD_
+
+! Improved calculation of CFL-number
+#define _CALC_CFL_FROM_SURFACE_FLUX_
+
+
+! ------------------------------ Statistics --------------------------------- !
+#define _STAT1_
+#define _STAT11_
+#define _STAT12_
+#undef _STAT13_
+#undef _STAT14_
+#undef _STAT15_
+#undef _STAT16_
+#undef _STAT17_
+#undef _STAT18_
+#undef _STAT19_
+#undef _STAT20_
+
+
+! ------------------------------ insitu-FT ---------------------------------- !
+#undef _INSITUFT_
+#undef _INSITUONLYA_
+
+
+! ------------------------ Immersed boundary seetings ----------------------- !
+! Common flag to enable all immersed-boundary implementations.
+#define _IB_
+
+! Cut-cell immersed boundary implementation. If this is not defined,
+! the ghost-cell method is implicitly assumed.
+#ifdef _IB_
+#    define _IB_CUTCELL_
+#    undef _IB_CUTCELL_MOVING_
+#endif
+
+! Third order accuracy for Runge-Kutta scheme in ghost-cell immersed boundary
+#if defined _IB_ && !defined _IB_CUTCELL_
+#    undef _IB_GHOSTCELL_THIRD_ORDER_
+#endif
+
+! Tell MGLET to store extrapolated values for ghost-cell immersed boundary
+! instead of area-averaged flux in solint, fieldio files etc.
+! The former is used for pressure computation to maintain divergence-free
+! condition but only at 1st-order accurate, whilst the latter is 2nd-order
+! accurate and more appropriate for post-processing of wall-resolved
+! (e.g. DNS) simulation data with ghost-cell IB.
+! NOTE: it was confirmed that restarting from the fieldio data in this format
+! does not affect the simulation results.
+#if defined _IB_ && !defined _IB_CUTCELL_
+#    undef _EXTRAPOLATED_GC_VALUES_
+#endif
+
+
+! ----------------------------- Pressure solver ----------------------------- !
+! Use a SOR-type pressure solver instead of the regular SIP solver. Will give
+! better performance for cases with many grid levels. The SIP solver is always
+! used on the coarsest level.
+#define _RELAX_
+
+! A race condition occurs in the pressure correction in multi-level grid
+! arrangements. This introduces a random component to the velocity with a
+! magnitude around floating point accuracy.
+! The differences occur at the PAR boundaries with ilevel < maxcallvl-2.
+! A connect2 placed after the fine-to-coarse operation on staggered field in
+! the pressure correction removes the problem.
+! Presumably, the reason for this is a different order of floating point
+! computations in mgpcorr + ftoc and boundmg(...,'I') in the pressure solver.
+! This define directive adds this connect2 thus ensures reproducible results.
+#undef _DETERMINISTIC_PRESSURE_SOLVER_
+
+
+! ------------------------------ Miscellaneous ------------------------------ !
+! Write useful disgnostics for channel flows, Ubulk, wall shear stress etc.
+#undef _CHANNEL_DIAGNOSE_
+
+! Calculate and print the force on the immersed boundary
+#define _BODYFORCEINF_
+
+! Write time dependend fields in Ensight-Format
+#undef _OUTPUTENSIGHT_
+
+! Other settingd
+#undef _BOUSSINESQ_
+#undef _WRITE_LPP_
+
+! This computes volume-avg. velocities and energy, and write the history
+! into LOGS/uvwbulk.log
+#undef _UVWBULK_SUPERFICIAL_VOLUME_AVERAGE_
+
+! This computes volume integrals of velocities and energy, and writes the
+! history into LOGS/uvwbulk.log
+#undef _UVWBULK_TIMES_VOLUME_
+
+#if defined _UVWBULK_SUPERFICIAL_VOLUME_AVERAGE_ || defined _UVWBULK_TIMES_VOLUME_
+#   define _INTEGRATED_PRESSURE_FORCE_
+#endif
+
+#undef _REGIONS_
+#ifdef _REGIONS_
+! Pourous media
+#   undef _POROSITY_
+#endif
+
+! Print information on grids for debugging purposes
+#undef _DEBUG_GRID_
+
+! Enable FLU and REC boundary condition (disable for performance improvement)
+#undef _FLU_BOUNDARY_ENABLED_
+
+
+! --------------------------------- Particles -------------------------------- !
+#define _POINT_PARTICLES_
+#undef _COMPUTE_MATERIAL_DERIV_
+
+
+! -------------------------------- Acoustics -------------------------------- !
+#undef _WELLENGL_
+
+
+! ----------------------- Advanced settings and macros ----------------------- !
+#ifdef _IB_CUTCELL_
+
+#   undef _SCABODY_
+
+!   debug mode
+#   undef _WRITESMALLMASTER_
+
+!   output / debug
+#   undef _IB_CUTCELL_SMALL_VTK_
+
+!   debug mode
+#   undef _PRINT_DIAGONALE_
+
+!   Druckgradient für Kanal
+#   define _IB_CUTCELL_GRADP_
+
+!   Statistik
+#   undef _WALLSHEAR_STAT_
+
+!   Wandschubsapnnung
+#   undef _INVERSE_DISTANCE_W_INTERPOLATION_
+#   define _LINEAR_LEAST_SQUARE_INTERPOLATION_
+#   undef _PSEUDO_LAPLACIAN_W_INTERPOLATION_
+
+!   Raue Wand an Gebietsgrenzen
+#   undef _ROUGHWALL_
+
+!   output
+#   undef _UINT_MEAN_
+
+!   debug
+#   undef _WRITE_STAG_XPS_
+
+!   potentiell weniger Zellen Schließen
+#   undef _BLOCKFACE_SMALL_
+
+!   more accurate calculatino of volumes and faces
+#   undef _CALCVOLUMESEXACT_
+
+!   Spezialfall
+#   undef _TAYLOR_COUETTE_
+
+#ifndef _DNS_
+! --- wallfunction only for ndef _DNS_ and _IB_CUTCELL_
+! Wandfunktion / linearer Gradient
+#   undef _WALL_FUNCTION_
+! G-Feld in der ersten Zelle
+#   undef _IB_CUTCELL_CALC_G_
+#ifdef _WALL_FUNCTION_
+! eines dieser Modelle muss gewaehlt sein
+#   define _WERNER_WENGLE_
+#   undef _LOG_LAW_
+#   undef _ROUGH_LOG_LAW_
+! Spezialfall fuer _ROUGH_LOG_LAW_: Rauhigkeit relativ dx
+#   undef _ROUGH_LOG_LAW_REL_
+#endif
+#endif
+
+#ifndef _IB_CUTCELL_MOVING_
+#   define _LOOP_ONLY_AUVWCELLS_
+#endif
+
+#if defined _IB_CUTCELL_MOVING_
+!!! Checks for blocked fields and merging, no flow solution
+#   undef _NO_TIME_INTEGRATION_
+#endif
+
+#endif
+
