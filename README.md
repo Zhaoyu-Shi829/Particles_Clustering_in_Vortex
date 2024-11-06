@@ -4,6 +4,11 @@
 * 🕸️ Multi-Grid Level mesh generation
 * 💧 Particles' movement is tracked by solving Maxey-Riley equations
 
+<p align="center">
+    <img src="https://github.com/user-attachments/assets/76e33a7e-12b5-4edb-957e-89516c73aed4", dpi=500>
+</p>
+
+
 
 
 
