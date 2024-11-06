@@ -5,10 +5,8 @@
 * 💧 Particles' movement is tracked by solving Maxey-Riley equations
 
 <p align="center">
-    <img src="https://github.com/user-attachments/assets/76e33a7e-12b5-4edb-957e-89516c73aed4", dpi=500>
+    <img src="https://github.com/user-attachments/assets/6ad9db1a-8d29-40a6-8bb4-7db282992e0f", dpi=500>
 </p>
-
-
 
 
 
