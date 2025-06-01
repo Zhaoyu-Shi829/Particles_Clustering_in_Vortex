@@ -178,7 +178,7 @@ C        BEEP: DIAMETER DEPENDENCE NOT FROM LITERATURE!
 
 
 C     TEST
-c     test funktioniert nicht wegen rb
+c     
 c      XPART=XPART+DT*UPART
 c      DO IPART1=1,NPART
 c         DIAM1=PP_PART_DIAMETER(DIAMCLASS(IPART1))
