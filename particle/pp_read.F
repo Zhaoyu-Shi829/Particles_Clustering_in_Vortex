@@ -106,7 +106,7 @@ C      NGRID=NOFTST(MAXLEVEL)
 
 
 
-C     nur der prozessor, der das letzte gitter hat, liest
+C     only the processor that has the last grid reads
 C      PROC_READ = IDPROCOFGRD(IGRDOFTST(NGRID,MAXLEVEL))
       PROC_READ = IDPROCOFGRD(IGRID_NTOTGRDS(NTOTGRDS))
 !      PROC_READ = 0
