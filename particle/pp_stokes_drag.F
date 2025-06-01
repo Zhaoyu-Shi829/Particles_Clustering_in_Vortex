@@ -3,10 +3,6 @@ C     comptes the stokes drag acting on a particle
       
       IMPLICIT NONE
       REAL UPART(3),UPART_F(3),DIAM,GMOL,DRAG_ACCEL(3),RHO,FACT_A_W
-      
-
-
-
       REAL VEL_DIFF(3), NORM_VEL_DIFF, RE_P, C_D_MAL_NORM_VEL_DIFF
 
       VEL_DIFF = UPART - UPART_F
@@ -15,7 +11,6 @@ C     comptes the stokes drag acting on a particle
       NORM_VEL_DIFF = SQRT(VEL_DIFF(1)**2 + VEL_DIFF(2)**2
      $   + VEL_DIFF(3)**2)
       RE_P = NORM_VEL_DIFF * DIAM / GMOL * RHO
-
 
 
 
