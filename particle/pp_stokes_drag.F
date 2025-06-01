@@ -1,5 +1,4 @@
-      SUBROUTINE PP_STOKES_DRAG(UPART,UPART_F,DIAM,GMOL,RHO,FACT_A_W,
-     $   DRAG_ACCEL)
+      SUBROUTINE PP_STOKES_DRAG(UPART,UPART_F,DIAM,GMOL,RHO,FACT_A_W,DRAG_ACCEL)
 C     comptes the stokes drag acting on a particle
       
       IMPLICIT NONE
